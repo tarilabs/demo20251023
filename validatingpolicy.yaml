@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: restrict-kserve-model-uri
+spec:
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  matchConstraints:
+    resourceRules:
+    - apiGroups: ["serving.kserve.io"]
+      apiVersions: ["v1beta1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["inferenceservices"]
+  validations:
+  - expression: >
+      object.spec.predictor.model.storageUri.startsWith('oci://quay.io/mmortari')
+      ||
+      object.spec.predictor.model.storageUri.startsWith('hf://')
+    message: >
+      storageUri must start with 'oci://quay.io/mmortari' or 'hf://'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: restrict-kserve-model-uri-binding
+spec:
+  policyName: restrict-kserve-model-uri
+  validationActions: ["Deny"]
