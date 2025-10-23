@@ -1,0 +1,12 @@
+apiVersion: ml.sigstore.dev/v1alpha1
+kind: ModelValidation
+metadata:
+  name: demo
+spec:
+  config:
+    sigstoreConfig:
+      certificateIdentity: "matteo.mortari@gmail.com"
+      certificateOidcIssuer: "https://accounts.google.com"
+  model:
+    path: /mnt/models
+    signaturePath: /mnt/models/model.sig

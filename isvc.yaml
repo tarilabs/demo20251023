@@ -2,9 +2,12 @@ apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
   name: my-inference-service
+  labels:
+    validation.ml.sigstore.dev/ml: "demo"
 spec:
   predictor:
     model:
       modelFormat:
         name: sklearn
-      storageUri: oci://quay.io/mmortari/demo20241108-base:modelcar-busybox
+      # storageUri: oci://quay.io/mmortari/demo20241108-base:modelcar-busybox
+      storageUri: hf://tarilabs/model-joblib

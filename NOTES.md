@@ -34,3 +34,39 @@ kubectl patch configmap -n default inferenceservice-config --type=json --patch-f
 kubectl delete pod -n default -l control-plane=kserve-controller-manager
 
 
+# Model Validation Operator
+
+```diff
+diff --git a/Makefile b/Makefile
+index 46f203d..2fd8437 100644
+--- a/Makefile
++++ b/Makefile
+@@ -53,7 +53,7 @@ endif
+ # This is useful for CI or a project to utilize a specific version of the operator-sdk toolkit.
+ OPERATOR_SDK_VERSION ?= v1.41.1
+ # Image URL to use all building/pushing image targets
+-IMG ?= controller:latest
++IMG ?= ghcr.io/sigstore/model-validation-operator:v0.0.1
+ 
+ # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
+ ifeq (,$(shell go env GOBIN))
+@@ -182,7 +182,7 @@ generate-local-certs: ## Generate TLS certificates for local development
+ # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
+ .PHONY: docker-build
+ docker-build: test ## Build docker image with the manager.
+-       $(CONTAINER_TOOL) build -t ${IMG} -f ${CONTAINER_FILE} .
++       $(CONTAINER_TOOL) build --load -t ${IMG} -f ${CONTAINER_FILE} .
+ 
+ .PHONY: docker-push
+ docker-push: ## Push docker image with the manager.
+```
+
+```sh
+make docker-build
+kind load docker-image ghcr.io/sigstore/model-validation-operator:v0.0.1
+```
+
+```sh
+source venv/bin/activate
+pip install model-signing
+```
