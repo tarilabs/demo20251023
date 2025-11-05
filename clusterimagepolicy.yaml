@@ -1,0 +1,23 @@
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: require-mmortari-keyless
+spec:
+  images:
+    - glob: "quay.io/mmortari/*"
+  authorities:
+    - keyless:
+        identities:
+          - issuer: "https://accounts.google.com"
+            subject: "matteo.mortari@gmail.com"
+---
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: allow-everything
+spec:
+  images:
+    - glob: "**"
+  authorities:
+    - static:
+        action: pass

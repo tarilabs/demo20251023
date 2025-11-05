@@ -1,0 +1,18 @@
+# you'll likely need your URL values
+kind: Secret
+apiVersion: v1
+metadata:
+  name: tas-demo-connection1
+  namespace: ds-prj1
+  labels:
+    opendatahub.io/dashboard: 'true'
+  annotations:
+    opendatahub.io/connection-type-ref: ct-tas-demo
+    openshift.io/description: ''
+    openshift.io/display-name: TAS DEMO Connection1
+data:
+  FULCIO_URL: aHR0cHM6Ly9mdWxjaW8tc2VydmVyLXRydXN0ZWQtYXJ0aWZhY3Qtc2lnbmVyLmFwcHMucm9zYS5tbW9ydGFyaS1yb3NhMi43YmNyLnAzLm9wZW5zaGlmdGFwcHMuY29t
+  REKOR_URL: aHR0cHM6Ly9yZWtvci1zZXJ2ZXItdHJ1c3RlZC1hcnRpZmFjdC1zaWduZXIuYXBwcy5yb3NhLm1tb3J0YXJpLXJvc2EyLjdiY3IucDMub3BlbnNoaWZ0YXBwcy5jb20=
+  TSA_URL: aHR0cHM6Ly90c2Etc2VydmVyLXRydXN0ZWQtYXJ0aWZhY3Qtc2lnbmVyLmFwcHMucm9zYS5tbW9ydGFyaS1yb3NhMi43YmNyLnAzLm9wZW5zaGlmdGFwcHMuY29t
+  TUF_URL: aHR0cHM6Ly90dWYtdHJ1c3RlZC1hcnRpZmFjdC1zaWduZXIuYXBwcy5yb3NhLm1tb3J0YXJpLXJvc2EyLjdiY3IucDMub3BlbnNoaWZ0YXBwcy5jb20=
+type: Opaque
