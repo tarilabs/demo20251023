@@ -16,9 +16,9 @@ spec:
   - expression: >
       object.spec.predictor.model.storageUri.startsWith('oci://quay.io/mmortari')
       ||
-      object.spec.predictor.model.storageUri.startsWith('hf://')
+      object.spec.predictor.model.storageUri.startsWith('hf://tarilabs')
     message: >
-      storageUri must start with 'oci://quay.io/mmortari' or 'hf://'
+      storageUri must start with 'oci://quay.io/mmortari' or 'hf://tarilabs'
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicyBinding

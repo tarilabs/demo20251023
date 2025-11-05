@@ -1,3 +1,5 @@
+
+```sh
 kind create cluster
 
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.1/cert-manager.yaml
@@ -6,11 +8,14 @@ helm install kserve-crd oci://ghcr.io/kserve/charts/kserve-crd --version v0.15.0
 
 helm install kserve oci://ghcr.io/kserve/charts/kserve --version v0.15.0 \
   --set kserve.controller.deploymentMode=RawDeployment \
+  --set kserve.controller.gateway.ingressGateway.createGateway=true 
+```
+
+not used:
   --set kserve.controller.gateway.ingressGateway.enableGatewayApi=true \
-  --set kserve.controller.gateway.ingressGateway.createGateway=true \
   --set kserve.controller.gateway.ingressGateway.kserveGateway=kserve/kserve-ingress-gateway
 
-
+```sh
 # Script to enable Modelcars
 # Fetch the current storageInitializer configuration
 config=$(kubectl get configmap inferenceservice-config -n default -o jsonpath='{.data.storageInitializer}')
@@ -32,9 +37,40 @@ kubectl patch configmap -n default inferenceservice-config --type=json --patch-f
 
 # Restart the KServe controller to apply changes
 kubectl delete pod -n default -l control-plane=kserve-controller-manager
+```
 
+OK the above ^
 
-# Model Validation Operator
+### Validaton policy
+
+```sh
+kubectl apply -f validatingpolicy.yaml 
+```
+
+```sh
+kubectl apply -f - <<EOF
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: my-inference-service
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: sklearn
+      storageUri: hf://untrusted/model
+EOF
+```
+
+Results in:
+
+```
+The inferenceservices "my-inference-service" is invalid: : ValidatingAdmissionPolicy 'restrict-kserve-model-uri' with binding 'restrict-kserve-model-uri-binding' denied request: storageUri must start with 'oci://quay.io/mmortari' or 'hf://mmortari'
+```
+
+as expected.
+
+<!-- # Model Validation Operator ATTEMPT 1
 
 ```diff
 diff --git a/Makefile b/Makefile
@@ -69,4 +105,18 @@ kind load docker-image ghcr.io/sigstore/model-validation-operator:v0.0.1
 ```sh
 source venv/bin/activate
 pip install model-signing
+``` -->
+
+# Model Validation Operator ATTEMPT 2
+
+```sh
+git checkout securesign/main
+./install-kind.sh
+```
+
+poi
+
+```sh
+kubectl apply -f modelvalidation.yaml
+kubectl apply -f isvc.yaml
 ```
