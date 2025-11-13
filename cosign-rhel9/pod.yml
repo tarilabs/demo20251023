@@ -50,7 +50,14 @@ spec:
       sources:
       - serviceAccountToken:
           path: token
-          audience: "sigstore"  # this is important and it's coming from the securesign setup
+          # audience: "sigstore"  # <-- this is important and it's coming from the securesign setup
+          # but not needed if Fulcio configured ~like:
+          # fulcio:
+          #   config:
+          #     MetaIssuers:
+          #       - ClientID: 'https://rh-oidc.s3.us-east-1.amazonaws.com/<...>'
+          #         Issuer: 'https://*.*.*.amazonaws.com/*'
+          #         Type: kubernetes
           expirationSeconds: 600
   - name: docker-config
     secret:
